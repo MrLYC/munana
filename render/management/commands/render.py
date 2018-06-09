@@ -7,6 +7,8 @@ from django.core.management.base import BaseCommand
 
 from model.models import Article
 
+from utils.num import convert_index
+
 
 def json_to_articles(path):
     for line in open(path, "r"):
@@ -33,6 +35,15 @@ def sort_articles(articles):
         yield article
 
 
+def sort_title(articles):
+    def gen():
+        for article in articles:
+            article.index = convert_index(article.title)
+            yield article
+
+    return sort_articles(gen())
+
+
 class Command(BaseCommand):
     help = 'render result'
 
@@ -41,14 +52,14 @@ class Command(BaseCommand):
         parser.add_argument('output')
         parser.add_argument(
             '--without_title', action='store_true', default=False)
-        parser.add_argument(
-            '--without_sort', action='store_true', default=False)
+        parser.add_argument('--sort_title', action='store_true', default=False)
+        parser.add_argument('--sort_url', action='store_true', default=False)
 
     def handle(self, *args, **options):
         template = get_template("render/render_article.tpl")
         articles = json_to_articles(options["input"])
-        if not options["without_sort"]:
-            articles = sort_articles(articles)
+        if options["sort_title"]:
+            articles = sort_title(articles)
         with open(options["output"], "wt") as fp:
             for article in articles:
                 print(article.title)
