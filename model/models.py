@@ -7,8 +7,8 @@ from utils.num import convert_cn_number
 
 class Article(models.Model):
     index = models.IntegerField()
-    url = models.CharField()
-    title = models.CharField()
+    url = models.TextField()
+    title = models.TextField()
     content = models.TextField()
 
     def __init__(self, *args, **kwargs):
