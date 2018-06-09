@@ -54,10 +54,10 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('input')
         parser.add_argument('output')
-        parser.add_argument(
-            '--without_title', action='store_true', default=False)
+        parser.add_argument('--without_title', action='store_true', default=False)
         parser.add_argument('--sort_title', action='store_true', default=False)
         parser.add_argument('--sort_url', action='store_true', default=False)
+        parser.add_argument('--remove', nargs="+", default=[])
 
     def handle(self, *args, **options):
         template = get_template("render/render_article.tpl")

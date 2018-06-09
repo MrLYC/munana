@@ -1,2 +1,2 @@
 {% if not without_title %}{{article.title}}{% endif %}
-{{article.content}}
+{% load filters %}{{article.content|remove_all:remove}}
