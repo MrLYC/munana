@@ -44,6 +44,10 @@ def sort_title(articles):
     return sort_articles(gen())
 
 
+def sort_url(articles):
+    return sorted(articles, key=lambda a: a.url)
+
+
 class Command(BaseCommand):
     help = 'render result'
 
@@ -58,11 +62,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         template = get_template("render/render_article.tpl")
         articles = json_to_articles(options["input"])
+
         if options["sort_title"]:
             articles = sort_title(articles)
+        elif options["sort_url"]:
+            articles = sort_url(articles)
+
         with open(options["output"], "wt") as fp:
             for article in articles:
-                print(article.title)
                 data = options.copy()
                 data["article"] = article
                 fp.write(template.render(data))
